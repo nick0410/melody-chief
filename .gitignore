@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Runtime data files (generated at runtime, keep musicians.json)
+data/users.json
+data/rooms.json
+data/profiles.json
+data/rec_output.json
+data/similarity_snapshot.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+
+# Build outputs
+dist/
+build/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Generated images from notebook
+similarity_heatmap.png
+dataset_overview.png

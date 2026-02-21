@@ -1,36 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Melody cheif</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — MelodyChief</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="form-container">
-        <div class="heading">
-            <h1>Login</h1>
-        </div>
-        
-        <form action="/login" method="POST">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Log In</button>
-        </form>
-        <p><a href="/signup">Don't have an account? Sign up</a></p>
-        <p id="error-message"></p>
-        <script>
-            // Display error messages if they exist in the URL ()
-            const urlParams = new URLSearchParams(window.location.search);
-            const error = urlParams.get('error');
-            const message = urlParams.get('message');
-            if (error) {
-                document.getElementById('error-message').textContent = error;
-            }
-            if (message) {
-                document.getElementById('error-message').textContent = message;
-            }
-        </script>
+  <div class="form-container">
+    <div class="heading">
+      <h1>MelodyChief</h1>
     </div>
+    <form action="/login" method="POST">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="your@email.com" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" placeholder="Your password" required>
+      <button type="submit">🎵 Log In</button>
+    </form>
+    <p><a href="/signup">Don't have an account? Sign up →</a></p>
+    <p id="error-message"></p>
+  </div>
+  <script src="app.js"></script>
 </body>
 </html>

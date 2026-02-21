@@ -1,371 +1,546 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        
-    
-    .menu-btn {
-            background-color: #00aaff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 5px 0;
-        }   
-
-        .profile-image, .user-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ddd;
-            padding: 5px;
-        }
-
-    
-    .room-container {
-            display: none;
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .room-container h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .available-users {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .user-item {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 48%;
-        }
-
-    
-
-        .user-info {
-            flex-grow: 1;
-        }
-
-        .user-info strong {
-            display: block;
-            font-size: 1.1em;
-            color: #444;
-        }
-
-        .add-btn {
-            background-color: #00aaff;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-
-        .room-members {
-            margin-top: 20px;
-        }
-
-        .room-member {
-            padding: 10px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-
-       
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — MelodyChief</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="menu-container" onclick="toggleMenu()">
-        <button class="menu-btn" onclick="logout()">Log Out</button>
-        <button class="menu-btn" onclick="toggleProfileForm()">Create Profile</button>
-        <button class="menu-btn" onclick="toggleRoomCreation()">Create Room</button>
-        <button class="menu-btn" onclick="openAudioEditors()">Go to Audio Editors</button>
-        <button class="menu-btn" onclick="window.location.href='terms.html'">Terms</button>
+
+<!-- ── Navbar ──────────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-brand">🎵 MelodyChief</div>
+  <div class="nav-links">
+    <button onclick="toggleSection('profile-section')">👤 My Profile</button>
+    <button onclick="toggleSection('rec-section')">🔍 Find Musicians</button>
+    <button onclick="toggleRoomCreation()">🎸 Create Room</button>
+    <button onclick="openAudioEditors()">🎛️ Audio Editor</button>
+    <button onclick="window.location.href='terms.html'">📋 Terms</button>
+    <button class="btn-danger" onclick="logout()">⏻ Log Out</button>
+  </div>
+</nav>
+
+<!-- ── Page wrapper ─────────────────────────────────────────────── -->
+<div class="page-wrapper">
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1 id="welcome-heading">Welcome to MelodyChief 🎵</h1>
+    <p>Discover musicians, create rooms, collaborate in real-time</p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-val" id="stat-profiles">0</div>
+        <div class="stat-label">Profiles</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-rooms">0</div>
+        <div class="stat-label">Rooms</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-online">1</div>
+        <div class="stat-label">Online</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="stat-musicians">50+</div>
+        <div class="stat-label">Musicians DB</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <div class="action-card" onclick="toggleSection('profile-section')" id="qa-profile">
+      <span class="icon">👤</span>
+      <strong>Create Profile</strong>
+      <span>Set up your musician profile</span>
+    </div>
+    <div class="action-card" onclick="toggleSection('rec-section')" id="qa-rec">
+      <span class="icon">🔍</span>
+      <strong>Find Musicians</strong>
+      <span>AI-powered recommendations</span>
+    </div>
+    <div class="action-card" onclick="toggleRoomCreation()" id="qa-room">
+      <span class="icon">🎸</span>
+      <strong>Create Room</strong>
+      <span>Start collaborating now</span>
+    </div>
+    <div class="action-card" onclick="openAudioEditors()">
+      <span class="icon">🎛️</span>
+      <strong>Audio Editor</strong>
+      <span>Edit tracks online</span>
+    </div>
+  </div>
+
+  <!-- ── Profile Section ─────────────────────────────────────── -->
+  <section id="profile-section" style="display:none" class="panel">
+    <div class="section-header">
+      <h2>👤 My Profile</h2>
+      <span class="section-badge">Setup</span>
     </div>
 
-    
-
-    
-        
-    
-
-    <div class="dashboard-container">
-        <h1>Welcome to the Musician Collaboration Dashboard</h1>
-        <p>Collaborate with musicians, create rooms, and explore musical creativity.</p>
-
-        <!-- Profile creation form -->
-        <div id="profile-form" class="profile-form">
-            <h2>Create Your Profile</h2>
-            <form id="profile-form" enctype="multipart/form-data" onsubmit="createProfile(event)">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email" required>
-
-                <label for="role">Are you an Instrumentalist or Vocalist?</label>
-                <select id="role" name="role" onchange="showRoleSpecificFields()" required>
-                    <option value="" disabled selected>Select your role</option>
-                    <option value="Instrumentalist">Instrumentalist</option>
-                    <option value="Vocalist">Vocalist</option>
-                </select>
-
-                <div id="instrumentalist-fields" style="display: none;">
-                    <label for="instrument-type">Type of Instrumentalist:</label>
-                    <input type="text" id="instrument-type" name="instrument-type" placeholder="Enter your instrument (e.g., Violin, Flute)">
-                </div>
-
-                <div id="vocalist-fields" style="display: none;">
-                    <label for="vocal-type">Type of Vocalist:</label>
-                    <input type="text" id="vocal-type" name="vocal-type" placeholder="Enter your vocal style (e.g., Classical, Pop)">
-                </div>
-
-                <label for="profile-pic">Profile Picture:</label>
-                <input type="file" id="profile-pic" name="profile-pic" accept="image/*" required>
-
-                <label for="experience">Years of Experience:</label>
-                <input type="number" id="experience" name="experience" placeholder="Enter your years of experience" required>
-
-                <label for="genre">Preferred Genre:</label>
-                <input type="text" id="genre" name="genre" placeholder="Enter your preferred genre (e.g., Jazz, Classic)" required>
-
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" placeholder="Enter your location" required>
-
-                <button type="submit">Submit Profile</button>
-            </form>
+    <div id="profile-form-container" class="profile-form" style="display:block">
+      <form id="profile-form" enctype="multipart/form-data" onsubmit="createProfile(event)">
+        <div>
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your musician name" required>
         </div>
-
-        <!-- Display profiles created -->
-        <div class="profile-list" id="profile-list">
-            <h2>Created Profiles</h2>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="your@email.com" required>
         </div>
+        <div class="full-row">
+          <label for="role">Role</label>
+          <select id="role" name="role" onchange="showRoleSpecificFields()" required>
+            <option value="" disabled selected>Select your role</option>
+            <option value="Instrumentalist">Instrumentalist</option>
+            <option value="Vocalist">Vocalist</option>
+          </select>
+        </div>
+        <div id="instrumentalist-fields" style="display:none">
+          <label for="instrument-type">Instrument</label>
+          <input type="text" id="instrument-type" name="instrument-type" placeholder="e.g. Guitar, Piano, Violin">
+        </div>
+        <div id="vocalist-fields" style="display:none">
+          <label for="vocal-type">Vocal Style</label>
+          <input type="text" id="vocal-type" name="vocal-type" placeholder="e.g. Classical, R&B, Pop">
+        </div>
+        <div>
+          <label for="experience">Experience (years)</label>
+          <input type="number" id="experience" name="experience" placeholder="Years of experience" required>
+        </div>
+        <div>
+          <label for="genre">Preferred Genre</label>
+          <input type="text" id="genre" name="genre" placeholder="e.g. Jazz, Rock, Classical" required>
+        </div>
+        <div>
+          <label for="location">Location</label>
+          <input type="text" id="location" name="location" placeholder="Your city / country" required>
+        </div>
+        <div>
+          <label for="profile-pic">Profile Picture</label>
+          <input type="file" id="profile-pic" name="profile-pic" accept="image/*" required>
+        </div>
+        <div class="full-row">
+          <button type="submit">✨ Create Profile</button>
+        </div>
+      </form>
+    </div>
 
-        <!-- Room creation section -->
-        <div class="room-container" id="room-container">
-            <h2>Create Room</h2>
-            <div class="available-users" id="available-users">
-                <!-- Users to be displayed here -->
-            </div>
+    <div class="divider"></div>
 
-            <!-- Section to upload music piece -->
+    <div class="profile-list" id="profile-list">
+      <h2>Created Profiles</h2>
+    </div>
+  </section>
+
+  <!-- ── ML Recommendations Section ─────────────────────────── -->
+  <section id="rec-section" style="display:none" class="panel">
+    <div class="section-header">
+      <h2>🔍 Find Musicians</h2>
+      <span class="section-badge">AI · Hybrid ML</span>
+    </div>
+    <p style="color:var(--muted);font-size:.89em;margin-bottom:18px">Powered by content-based + collaborative filtering. Search the musicians database to find your perfect collaborator.</p>
+
+    <div class="rec-search-bar">
+      <input type="text" id="rec-instrument" placeholder="🎸 Instrument (e.g. Guitar, Piano, Synthesizer)">
+      <input type="text" id="rec-genre" placeholder="🎵 Genre (e.g. Jazz, Rock, Classical)">
+      <select id="rec-skill">
+        <option value="">All Skill Levels</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Expert">Expert</option>
+      </select>
+      <button onclick="getRecommendations()">🔍 Find</button>
+    </div>
+
+    <div class="rec-loading" id="rec-loading">Searching musicians database…</div>
+    <div class="rec-grid" id="rec-results">
+      <div class="rec-empty">
+        <span class="empty-icon">🎸</span>
+        Search above to discover musicians from our database
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Room Section ────────────────────────────────────────── -->
+  <div class="room-container" id="room-container">
+    <h2 id="room-heading">🎸 Collaboration Room</h2>
+
+    <h3>Available Musicians</h3>
+    <div class="available-users" id="available-users"></div>
+
+    <div class="room-members" id="room-members">
+      <h3>Room Members</h3>
+    </div>
+
     <div class="upload-audio">
-        <h3>Upload Music Piece</h3>
-        <input type="file" id="audio-upload" accept="audio/*" required>
+      <h3>Upload Music Piece</h3>
+      <input type="file" id="audio-upload" accept="audio/*">
     </div>
 
-            <div class="room-members" id="room-members">
-                <h3>Room Members</h3>
-                <!-- Selected members will appear here -->
-            </div>
-
-            <!-- Section to display uploaded music -->
     <div class="uploaded-audio" id="uploaded-audio">
-        <h3>Uploaded Music Piece</h3>
-        <div id="audio-list"></div>
-    
-        </div>
+      <h3>Uploaded Tracks</h3>
+      <div id="audio-list"></div>
     </div>
 
-    <script>
-        var profiles = []; // Store profiles
-        var roomMembers = []; // Store room members
-        var uploadedAudioFiles = []; // Store uploaded audio files
+    <div id="chat-panel">
+      <h3>Room Chat <span id="room-id-display"></span></h3>
+      <div id="chat-messages"></div>
+      <div id="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Type a message…">
+        <button id="chat-send" onclick="sendChatMessage()">Send</button>
+      </div>
+    </div>
+  </div>
 
+</div><!-- /page-wrapper -->
 
-        function toggleProfileForm() {
-            var form = document.getElementById('profile-form');
-            form.style.display = form.style.display === "none" ? "block" : "none";
-        }
+<!-- Toast -->
+<div id="toast"></div>
 
-       
+<!-- ── Scripts ────────────────────────────────────────────────── -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // ── State ──────────────────────────────────────────────────────
+  var profiles          = [];
+  var roomMembers       = [];
+  var uploadedAudioFiles = [];
+  var currentUser       = '';
+  var currentRoomId     = null;
+  var socket            = io();
 
-        function toggleRoomCreation() {
-            var roomContainer = document.getElementById('room-container');
-            roomContainer.style.display = roomContainer.style.display === "none" ? "block" : "none";
-            displayAvailableUsers();
-        }
+  // ── Toast helper ───────────────────────────────────────────────
+  function showToast(msg, type, duration) {
+    type     = type     || 'success';
+    duration = duration || 3200;
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className   = 'show ' + type;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function() { t.className = ''; }, duration);
+  }
 
-        function showRoleSpecificFields() {
-            var role = document.getElementById('role').value;
-            document.getElementById('instrumentalist-fields').style.display = role === 'Instrumentalist' ? 'block' : 'none';
-            document.getElementById('vocalist-fields').style.display = role === 'Vocalist' ? 'block' : 'none';
-        }
-
-        function createProfile(event) {
-            event.preventDefault();
-
-            // Get form data
-            var name = document.getElementById('name').value;
-            var email = document.getElementById('email').value;
-            var role = document.getElementById('role').value;
-            var instrumentType = document.getElementById('instrument-type').value;
-            var vocalType = document.getElementById('vocal-type').value;
-            var experience = document.getElementById('experience').value;
-            var genre = document.getElementById('genre').value;
-            var location = document.getElementById('location').value;
-            var profilePic = document.getElementById('profile-pic').files[0];
-
-            // Create profile object and store in profiles array
-            var profile = {
-                name: name,
-                email: email,
-                role: role,
-                instrumentType: instrumentType,
-                vocalType: vocalType,
-                experience: experience,
-                genre: genre,
-                location: location,
-                profilePic: URL.createObjectURL(profilePic) // Convert image to a URL
-            };
-
-            profiles.push(profile);
-
-            // Display the profile in the list
-            displayProfiles();
-            toggleProfileForm();
-
-            // Reset the form
-            document.getElementById('profile-form').reset();
-        }
-
-        function displayProfiles() {
-            var profileList = document.getElementById('profile-list');
-            profileList.innerHTML = ''; // Clear current profiles
-
-            profiles.forEach((profile, index) => {
-                var profileItem = document.createElement('div');
-                profileItem.classList.add('profile-item');
-
-                var profileContent = `
-                    <img src="${profile.profilePic}" alt="Profile Image" class="profile-image">
-                    <div>
-                        <strong>${profile.name} (${profile.role})</strong>
-                        <span>${profile.email}</span>
-                    </div>
-                    <button class="toggle-btn" onclick="toggleDetails(this)">+</button>
-                    <div class="profile-details">
-                        <p>Instrument: ${profile.instrumentType || "N/A"}</p>
-                        <p>Vocal Type: ${profile.vocalType || "N/A"}</p>
-                        <p>Experience: ${profile.experience} years</p>
-                        <p>Genre: ${profile.genre}</p>
-                        <p>Location: ${profile.location}</p>
-                    </div>
-                `;
-                profileItem.innerHTML = profileContent;
-                profileList.appendChild(profileItem);
-            });
-        }
-
-        function toggleDetails(button) {
-            var profileDetails = button.nextElementSibling;
-            if (profileDetails.style.display === "block") {
-                profileDetails.style.display = "none";
-                button.textContent = "+";
-            } else {
-                profileDetails.style.display = "block";
-                button.textContent = "-";
-            }
-        }
-
-        function displayAvailableUsers() {
-            var availableUsers = document.getElementById('available-users');
-            availableUsers.innerHTML = ''; // Clear current users
-
-            profiles.forEach((profile, index) => {
-                var userItem = document.createElement('div');
-                userItem.classList.add('user-item');
-
-                var userContent = `
-                    <img src="${profile.profilePic}" alt="User Image" class="user-image">
-                    <div class="user-info">
-                        <strong>${profile.name}</strong>
-                        <span>${profile.role}</span>
-                    </div>
-                    <button class="add-btn" onclick="addToRoom(${index})">+</button>
-                `;
-
-                userItem.innerHTML = userContent;
-                availableUsers.appendChild(userItem);
-            });
-        }
-
-        function addToRoom(profileIndex) {
-            var profile = profiles[profileIndex];
-            roomMembers.push(profile);
-
-            var roomMembersContainer = document.getElementById('room-members');
-            var roomMemberItem = document.createElement('div');
-            roomMemberItem.classList.add('room-member');
-            roomMemberItem.innerText = profile.name + " (" + profile.role + ")";
-            roomMembersContainer.appendChild(roomMemberItem);
-        }
-
-        document.getElementById('audio-upload').addEventListener('change', function(event) {
-        var audioFile = event.target.files[0];
-        var audioURL = URL.createObjectURL(audioFile);
-        uploadedAudioFiles.push({ name: audioFile.name, url: audioURL });
-
-        displayUploadedAudio();
+  // ── Toggle panel sections ──────────────────────────────────────
+  function toggleSection(id) {
+    var el = document.getElementById(id);
+    var open = el.style.display !== 'none' && el.style.display !== '';
+    // Close all panels cleanly
+    ['profile-section','rec-section'].forEach(function(s){
+      document.getElementById(s).style.display = 'none';
+      var m = {'profile-section':'qa-profile','rec-section':'qa-rec'};
+      if(m[s]) document.getElementById(m[s]).classList.remove('active-card');
     });
-
-
-   
-
-    function displayUploadedAudio() {
-        var audioList = document.getElementById('audio-list');
-        audioList.innerHTML = ''; // Clear current list
-
-        uploadedAudioFiles.forEach(function(audio) {
-            var audioItem = document.createElement('div');
-            audioItem.classList.add('audio-item');
-            
-            audioItem.innerHTML = `
-                <p>${audio.name}</p>
-                <audio controls>
-                    <source src="${audio.url}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-                <br>
-                <a href="${audio.url}" download="${audio.name}">Download</a>
-            `;
-            audioList.appendChild(audioItem);
-        });
+    if (!open) {
+      el.style.display = 'block';
+      var qaMap = {'profile-section':'qa-profile','rec-section':'qa-rec'};
+      if(qaMap[id]) document.getElementById(qaMap[id]).classList.add('active-card');
     }
+  }
 
-        function logout() {
-            window.location.href = "index.html";
+  // ── Init ───────────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    // Fetch user
+    fetch('/api/me')
+      .then(function(r){ return r.json(); })
+      .then(function(u){
+        currentUser = u.name;
+        document.getElementById('welcome-heading').textContent = 'Welcome back, ' + u.name + ' 🎵';
+      })
+      .catch(function(){});
+
+    // Restore profiles
+    try {
+      var saved = localStorage.getItem('mc_profiles');
+      if (saved) { var p = JSON.parse(saved); if(p.length){ profiles=p; displayProfiles(); document.getElementById('stat-profiles').textContent=profiles.length; } }
+    } catch(e){}
+
+    // Fetch stats
+    fetch('/api/rooms').then(function(r){return r.json();}).then(function(d){
+      document.getElementById('stat-rooms').textContent = d.length;
+    }).catch(function(){});
+
+    // Auto-load recommendations on section open
+    document.getElementById('rec-section').addEventListener('transitionend', function(){});
+  });
+
+  // ── Socket.io ─────────────────────────────────────────────────
+  socket.on('room:message', function(data) {
+    var box = document.getElementById('chat-messages');
+    if (!box) return;
+    var div = document.createElement('div');
+    if (data.system) {
+      div.className   = 'msg-system';
+      div.textContent = data.text;
+    } else {
+      div.className   = 'msg-user';
+      div.innerHTML   = '<strong>' + escapeHtml(data.userName) + '</strong> <span style="color:var(--muted);font-size:.78em">' + data.time + '</span><br>' + escapeHtml(data.text);
+    }
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  });
+  socket.on('room:users', function(users) {
+    document.getElementById('room-heading').textContent = '\uD83C\uDFB8 Room (' + users.length + ' online)';
+    document.getElementById('stat-online').textContent = users.length;
+  });
+  socket.on('room:new', function(room) {
+    showToast('New room: ' + room.name, 'info');
+    fetch('/api/rooms').then(function(r){return r.json();}).then(function(d){
+      document.getElementById('stat-rooms').textContent = d.length;
+    }).catch(function(){});
+  });
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Profile form ───────────────────────────────────────────────
+  function toggleProfileForm() { toggleSection('profile-section'); }
+  function showRoleSpecificFields() {
+    var role = document.getElementById('role').value;
+    document.getElementById('instrumentalist-fields').style.display = role === 'Instrumentalist' ? 'block' : 'none';
+    document.getElementById('vocalist-fields').style.display        = role === 'Vocalist'        ? 'block' : 'none';
+  }
+
+  function createProfile(event) {
+    event.preventDefault();
+    var name           = document.getElementById('name').value;
+    var email          = document.getElementById('email').value;
+    var role           = document.getElementById('role').value;
+    var instrumentType = document.getElementById('instrument-type').value;
+    var vocalType      = document.getElementById('vocal-type').value;
+    var experience     = document.getElementById('experience').value;
+    var genre          = document.getElementById('genre').value;
+    var location       = document.getElementById('location').value;
+    var picFile        = document.getElementById('profile-pic').files[0];
+
+    var profile = { name:name, email:email, role:role, instrumentType:instrumentType,
+      vocalType:vocalType, experience:experience, genre:genre, location:location,
+      profilePic: picFile ? URL.createObjectURL(picFile) : '' };
+
+    profiles.push(profile);
+    localStorage.setItem('mc_profiles', JSON.stringify(profiles));
+    document.getElementById('stat-profiles').textContent = profiles.length;
+
+    fetch('/api/profiles', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name:name, email:email, role:role, instrumentType:instrumentType,
+        vocalType:vocalType, experience:experience, genre:genre, location:location })
+    }).catch(function(){});
+
+    displayProfiles();
+    showToast('Profile created! 🎉', 'success');
+    document.getElementById('profile-form').reset();
+    document.getElementById('instrumentalist-fields').style.display = 'none';
+    document.getElementById('vocalist-fields').style.display = 'none';
+  }
+
+  function displayProfiles() {
+    var profileList = document.getElementById('profile-list');
+    profileList.innerHTML = '<h2>Created Profiles</h2>';
+    profiles.forEach(function(profile, index) {
+      var item = document.createElement('div');
+      item.classList.add('profile-item');
+      var initials = profile.name ? profile.name.charAt(0).toUpperCase() : '?';
+      var img = profile.profilePic
+        ? '<img src="' + profile.profilePic + '" alt="Profile" class="profile-image">'
+        : '<div class="profile-image" style="background:linear-gradient(135deg,var(--purple),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:1.4em;color:#fff">' + initials + '</div>';
+      item.innerHTML = img +
+        '<div><strong>' + escapeHtml(profile.name) + ' (' + escapeHtml(profile.role) + ')</strong><span>' + escapeHtml(profile.email) + '</span></div>' +
+        '<button class="toggle-btn" onclick="toggleDetails(this)">+ Details</button>' +
+        '<div class="profile-details">' +
+          '<p><strong>Instrument/Voice:</strong> ' + escapeHtml(profile.instrumentType || profile.vocalType || 'N/A') + '</p>' +
+          '<p><strong>Experience:</strong> ' + escapeHtml(profile.experience) + ' years</p>' +
+          '<p><strong>Genre:</strong> ' + escapeHtml(profile.genre) + '</p>' +
+          '<p><strong>Location:</strong> ' + escapeHtml(profile.location) + '</p>' +
+        '</div>';
+      profileList.appendChild(item);
+    });
+  }
+
+  function toggleDetails(button) {
+    var details = button.nextElementSibling;
+    var open    = details.style.display === 'block';
+    details.style.display = open ? 'none' : 'block';
+    button.textContent    = open ? '+ Details' : '- Hide';
+  }
+
+  // ── Room ───────────────────────────────────────────────────────
+  function toggleRoomCreation() {
+    var rc     = document.getElementById('room-container');
+    var opening = rc.style.display !== 'block';
+    rc.style.display = opening ? 'block' : 'none';
+    document.getElementById('qa-room').classList.toggle('active-card', opening);
+    if (!opening) return;
+
+    displayAvailableUsers();
+    if (!currentRoomId) {
+      fetch('/api/rooms', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ name: 'Room by ' + (currentUser || 'Musician') })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(d) {
+        if (d.success) {
+          currentRoomId = d.room.id;
+          document.getElementById('room-id-display').textContent = '· ' + currentRoomId;
+          document.getElementById('chat-panel').style.display = 'block';
+          socket.emit('room:join', { roomId: currentRoomId, userName: currentUser || 'Musician' });
+          showToast('Room created! ID: ' + currentRoomId, 'success', 6000);
         }
+      })
+      .catch(function(){ showToast('Room created locally.', 'info'); });
+    } else {
+      document.getElementById('chat-panel').style.display = 'block';
+    }
+  }
 
-        function openAudioEditors() {
-            window.location.href = 'https://audiomass.co/';
-        }
+  function displayAvailableUsers() {
+    var el = document.getElementById('available-users');
+    el.innerHTML = '';
+    if (!profiles.length) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:.87em;grid-column:1/-1">No profiles yet — create one first.</p>';
+      return;
+    }
+    profiles.forEach(function(profile, index) {
+      var item = document.createElement('div');
+      item.classList.add('user-item');
+      var initials = profile.name ? profile.name.charAt(0).toUpperCase() : '?';
+      var img = profile.profilePic
+        ? '<img src="' + profile.profilePic + '" alt="" class="user-image">'
+        : '<div class="user-image" style="background:linear-gradient(135deg,var(--purple),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:1.2em;color:#fff">' + initials + '</div>';
+      item.innerHTML = img +
+        '<div class="user-info"><strong>' + escapeHtml(profile.name) + '</strong><span>' + escapeHtml(profile.role) + '</span></div>' +
+        '<button class="add-btn" onclick="addToRoom(' + index + ')">+ Add</button>';
+      el.appendChild(item);
+    });
+  }
 
-      </script>
-      </body>
-      </html>
+  function addToRoom(idx) {
+    var profile = profiles[idx];
+    if (roomMembers.find(function(m){ return m.email === profile.email; })) {
+      showToast(profile.name + ' is already in the room.', 'info'); return;
+    }
+    roomMembers.push(profile);
+    var rc  = document.getElementById('room-members');
+    var div = document.createElement('div');
+    div.classList.add('room-member');
+    div.textContent = '🎵 ' + profile.name + ' — ' + profile.role;
+    rc.appendChild(div);
+    showToast(profile.name + ' added!', 'success');
+  }
+
+  document.getElementById('audio-upload').addEventListener('change', function(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+    uploadedAudioFiles.push({ name: file.name, url: URL.createObjectURL(file) });
+    displayUploadedAudio();
+  });
+
+  function displayUploadedAudio() {
+    var list = document.getElementById('audio-list');
+    list.innerHTML = '';
+    uploadedAudioFiles.forEach(function(audio) {
+      var item = document.createElement('div');
+      item.classList.add('audio-item');
+      item.innerHTML =
+        '<p>🎵 ' + escapeHtml(audio.name) + '</p>' +
+        '<audio controls><source src="' + audio.url + '" type="audio/mpeg">Your browser does not support audio.</audio><br>' +
+        '<a href="' + audio.url + '" download="' + escapeHtml(audio.name) + '">⬇ Download</a>';
+      list.appendChild(item);
+    });
+  }
+
+  // ── Chat ───────────────────────────────────────────────────────
+  function sendChatMessage() {
+    var input = document.getElementById('chat-input');
+    var text  = input.value.trim();
+    if (!text || !currentRoomId) return;
+    socket.emit('room:message', { roomId: currentRoomId, userName: currentUser || 'Musician', text: text });
+    input.value = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.activeElement.id === 'chat-input') sendChatMessage();
+  });
+
+  // ── ML Recommendations ────────────────────────────────────────
+  function getRecommendations() {
+    var instrument = document.getElementById('rec-instrument').value.trim();
+    var genre      = document.getElementById('rec-genre').value.trim();
+    var skill      = document.getElementById('rec-skill').value;
+
+    var params = new URLSearchParams();
+    if (instrument) params.append('instrument', instrument);
+    if (genre)      params.append('genre', genre);
+    if (skill)      params.append('skill', skill);
+
+    var grid    = document.getElementById('rec-results');
+    var loading = document.getElementById('rec-loading');
+    grid.innerHTML = '';
+    loading.style.display = 'block';
+
+    fetch('/api/recommendations?' + params.toString())
+      .then(function(r){ return r.json(); })
+      .then(function(results) {
+        loading.style.display = 'none';
+        renderRecCards(results, instrument || genre || skill || 'all');
+      })
+      .catch(function() {
+        loading.style.display = 'none';
+        grid.innerHTML = '<div class="rec-empty"><span class="empty-icon">⚠️</span>Could not fetch recommendations. Make sure the server is running.</div>';
+      });
+  }
+
+  function renderRecCards(results, query) {
+    var grid = document.getElementById('rec-results');
+    if (!results || !results.length) {
+      grid.innerHTML = '<div class="rec-empty"><span class="empty-icon">🎵</span>No musicians found for "' + escapeHtml(query) + '". Try different keywords.</div>';
+      return;
+    }
+    grid.innerHTML = '';
+    results.forEach(function(m, i) {
+      var card  = document.createElement('div');
+      card.classList.add('rec-card');
+      card.style.animationDelay = (i * 0.06) + 's';
+
+      var emoji = m.role === 'Vocalist' ? '🎤' : '🎸';
+      var score = m.score !== undefined ? Math.round(m.score * 100) : Math.max(40, 100 - i * 8);
+      var algoClass = m.algo || 'hybrid';
+
+      card.innerHTML =
+        '<span class="algo-badge ' + algoClass + '">' + algoClass + '</span>' +
+        '<div class="rec-card-header">' +
+          '<div class="rec-avatar">' + emoji + '</div>' +
+          '<div><div class="rec-name">' + escapeHtml(m.name || 'Musician') + '</div>' +
+              '<div class="rec-role">' + escapeHtml(m.role || m.instr1 || 'Musician') + '</div></div>' +
+        '</div>' +
+        '<div class="rec-card-meta">' +
+          (m.instr1 ? '<strong>Instrument:</strong> ' + escapeHtml(m.instr1) + (m.instr2 ? ', ' + escapeHtml(m.instr2) : '') + '<br>' : '') +
+          (m.genre ? '<strong>Genre:</strong> ' + escapeHtml(m.genre) + '<br>' : '') +
+          (m.experience !== undefined ? '<strong>Experience:</strong> ' + escapeHtml(String(m.experience)) + ' yrs<br>' : '') +
+          (m.location ? '<strong>Location:</strong> ' + escapeHtml(m.location) : '') +
+        '</div>' +
+        '<div class="rec-tags">' +
+          (m.genre    ? '<span class="rec-tag genre">' + escapeHtml(m.genre) + '</span>'          : '') +
+          (m.location ? '<span class="rec-tag location">📍 ' + escapeHtml(m.location) + '</span>'  : '') +
+          (m.skill_level ? '<span class="rec-tag skill">' + escapeHtml(m.skill_level) + '</span>' : '') +
+        '</div>' +
+        (m.profile_link ? '<a class="profile-link" href="' + escapeHtml(m.profile_link) + '" target="_blank">🔗 View Profile</a>' : '') +
+        '<div class="rec-score-bar"><div class="rec-score-fill" style="width:0%" data-w="' + score + '%"></div></div>';
+
+      grid.appendChild(card);
+
+      // Animate score bar
+      setTimeout(function() {
+        var fill = card.querySelector('.rec-score-fill');
+        if (fill) fill.style.width = fill.dataset.w;
+      }, 100 + i * 60);
+    });
+  }
+
+  function logout()         { window.location.href = '/logout'; }
+  function openAudioEditors(){ window.location.href = 'https://audiomass.co/'; }
+</script>
+</body>
+</html>

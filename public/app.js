@@ -1,43 +1,85 @@
-// User registration (simplified without backend storage)
-document.getElementById("signup-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+/**
+ * app.js — Shared utility for Melody Chief
+ * Handles URL param messages, input polish, and form helpers across all pages.
+ */
 
-  // Store user details in localStorage for demo purposes
-  localStorage.setItem("user", JSON.stringify({ name, email, password }));
+(function () {
+    'use strict';
 
-  alert("User registered successfully! Please log in.");
-});
+    // ── URL param → in-page message ───────────────────────────────────────────
+    function applyUrlMessages() {
+        var el = document.getElementById('error-message');
+        if (!el) return;
 
-//  room ka logic
-document.getElementById("create-room").addEventListener("click", () => {
-  const roomName = document.getElementById("room-name").value;
-  if (roomName) {
-      const roomId = Math.random().toString(36).substring(2, 15);
-      alert(`Room created: ${roomName}, ID: ${roomId}`);
-      addRoomToList(roomName, roomId);
-  } else {
-      alert("Please enter a room name.");
-  }
-});
+        var params  = new URLSearchParams(window.location.search);
+        var error   = params.get('error');
+        var message = params.get('message');
 
-// room meh jane ka logic
-document.getElementById("join-room-btn").addEventListener("click", () => {
-  const roomId = document.getElementById("join-room").value;
-  if (roomId) {
-      alert(`Joined Room with ID: ${roomId}`);
-      // Here you would connect the user to the room
-  } else {
-      alert("Please enter a room ID.");
-  }
-});
+        if (error) {
+            el.style.color = '#ff5252';
+            el.textContent = error;
+        } else if (message) {
+            el.style.color = '#2e7d32';
+            el.textContent = message;
+        }
 
-// Display room in the list
-function addRoomToList(roomName, roomId) {
-  const roomList = document.getElementById("room-list");
-  const roomItem = document.createElement("div");
-  roomItem.innerHTML = `<strong>${roomName}</strong> (ID: ${roomId})`;
-  roomList.appendChild(roomItem);
-}
+        // Clean URL without reloading
+        if ((error || message) && window.history.replaceState) {
+            var clean = window.location.pathname;
+            window.history.replaceState({}, document.title, clean);
+        }
+    }
+
+    // ── Password strength indicator ───────────────────────────────────────────
+    function attachPasswordStrength() {
+        var pwdInput = document.querySelector('input[type="password"]');
+        if (!pwdInput) return;
+
+        var hint = document.createElement('small');
+        hint.id  = 'pwd-hint';
+        hint.style.cssText = 'display:block;margin-top:-10px;margin-bottom:8px;font-size:0.78em;transition:color 0.3s';
+        pwdInput.parentNode.insertBefore(hint, pwdInput.nextSibling);
+
+        pwdInput.addEventListener('input', function () {
+            var v = pwdInput.value;
+            if (!v) { hint.textContent = ''; return; }
+            if (v.length < 6) {
+                hint.style.color = '#ff5252';
+                hint.textContent = 'Too short — min 6 characters';
+            } else if (v.length < 10 || !/[0-9]/.test(v)) {
+                hint.style.color = '#f57c00';
+                hint.textContent = 'Fair — add numbers or symbols to strengthen';
+            } else {
+                hint.style.color = '#2e7d32';
+                hint.textContent = 'Strong password ✓';
+            }
+        });
+    }
+
+    // ── Smooth button loading state ───────────────────────────────────────────
+    function attachFormLoadingState() {
+        var forms = document.querySelectorAll('form[action]');
+        forms.forEach(function (form) {
+            form.addEventListener('submit', function () {
+                var btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled     = true;
+                    btn.dataset.orig = btn.textContent;
+                    btn.textContent  = 'Please wait…';
+                    // Re-enable after 5s in case of redirect failure
+                    setTimeout(function () {
+                        btn.disabled    = false;
+                        btn.textContent = btn.dataset.orig;
+                    }, 5000);
+                }
+            });
+        });
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        applyUrlMessages();
+        attachPasswordStrength();
+        attachFormLoadingState();
+    });
+}());
