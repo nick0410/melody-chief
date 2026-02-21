@@ -165,27 +165,6 @@ Returns up to **24 musicians** scored and tagged with `algo: "content" | "collab
 
 ---
 
-## 🚢 Deployment
-
-### Vercel (recommended for fast deploys)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/nick0410/melody-chief)
-
-1. Import repo at [vercel.com/new](https://vercel.com/new)
-2. Add env var: `SESSION_SECRET` = any random string
-3. Deploy — done ✅
-
-> ⚠️ Socket.io real-time features require a persistent server. Use Render for full functionality.
-
-### Render (full-stack with Socket.io)
-
-1. Create Web Service at [render.com](https://render.com)
-2. Connect `nick0410/melody-chief` — `render.yaml` is auto-detected
-3. `SESSION_SECRET` is auto-generated
-4. Deploy ✅
-
----
-
 ## 🌟 Environment Variables
 
 | Variable | Required | Description |
