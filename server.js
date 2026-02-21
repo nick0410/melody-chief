@@ -13,12 +13,16 @@ const io     = new Server(server);
 const PORT   = process.env.PORT || 8080;
 
 // ─── Data directory & helpers ────────────────────────────────────────────────
+// On Vercel the filesystem is read-only except /tmp
+const IS_VERCEL    = !!process.env.VERCEL;
 const DATA_DIR     = path.join(__dirname, 'data');
-const USERS_FILE   = path.join(DATA_DIR, 'users.json');
-const PROFILES_FILE = path.join(DATA_DIR, 'profiles.json');
-const ROOMS_FILE   = path.join(DATA_DIR, 'rooms.json');
+const WRITE_DIR    = IS_VERCEL ? '/tmp' : DATA_DIR;
+const USERS_FILE   = path.join(WRITE_DIR, 'users.json');
+const PROFILES_FILE = path.join(WRITE_DIR, 'profiles.json');
+const ROOMS_FILE   = path.join(WRITE_DIR, 'rooms.json');
 
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR);
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (IS_VERCEL && !fs.existsSync('/tmp')) { /* /tmp always exists on Vercel */ }
 
 function readJSON(filePath, defaultVal = []) {
     try {
@@ -324,6 +328,10 @@ app.get('/api/recommendations', requireAuth, (req, res) => {
 app.use((req, res) => res.status(404).redirect('/'));
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-server.listen(PORT, () => {
-    log(`MelodyChief server running → http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    server.listen(PORT, () => {
+        log(`MelodyChief server running → http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
